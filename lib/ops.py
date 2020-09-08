@@ -46,7 +46,7 @@ def conv2_tran(batch_input, kernel=3, output_channel=64, stride=1, use_bias=True
 # Define the convolution building block
 def conv2(batch_input, kernel=3, output_channel=64, stride=1, use_bias=True, scope='conv'):
     # kernel: An integer specifying the width and height of the 2D convolution window
-    with tf.variable_scope(scope):
+    with tf.compat.v1.variable_scope(scope):
         if use_bias:
             return slim.conv2d(batch_input, output_channel, [kernel, kernel], stride, 'SAME', data_format='NHWC',
                             activation_fn=None, weights_initializer=tf.contrib.layers.xavier_initializer())

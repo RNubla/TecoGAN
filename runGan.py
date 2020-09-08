@@ -67,13 +67,13 @@ if( runcase == 0 ): # download inference data, trained models
 elif( runcase == 1 ): # inference a trained model
     
     dirstr = './results/' # the place to save the results
-    testpre = ['calendar'] # the test cases
+    testpre = ['bomb'] # the test cases
 
     if (not os.path.exists(dirstr)): os.mkdir(dirstr)
     
     # run these test cases one by one:
     for nn in range(len(testpre)):
-        cmd1 = ["python3", "main.py",
+        cmd1 = ["python", "main.py",
             "--cudaID", "0",            # set the cudaID here to use only one GPU
             "--output_dir",  dirstr,    # Set the place to put the results.
             "--summary_dir", os.path.join(dirstr, 'log/'), # Set the place to put the log. 
