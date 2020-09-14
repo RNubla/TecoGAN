@@ -1,8 +1,9 @@
 # TecoGAN
+
 This repository contains source code and materials for the TecoGAN project, i.e. code for a TEmporally COherent GAN for video super-resolution.
 _Authors: Mengyu Chu, You Xie, Laura Leal-Taixe, Nils Thuerey. Technical University of Munich._
 
-This repository so far contains the code for the TecoGAN _inference_ 
+This repository so far contains the code for the TecoGAN _inference_
 and _training_. Data generation, i.e., download, will follow soon.
 Pre-trained models are also available below, you can find links for downloading and instructions below.
 The video and pre-print of our paper can be found here:
@@ -14,7 +15,7 @@ Preprint: <https://arxiv.org/pdf/1811.09393.pdf>
 
 ### Additional Generated Outputs
 
-Our method generates fine details that 
+Our method generates fine details that
 persist over the course of long generated video sequences. E.g., the mesh structures of the armor,
 the scale patterns of the lizard, and the dots on the back of the spider highlight the capabilities of our method.
 Our spatio-temporal discriminator plays a key role to guide the generator network towards producing coherent detail.
@@ -29,11 +30,17 @@ Our spatio-temporal discriminator plays a key role to guide the generator networ
 
 Below you can find a quick start guide for running a trained TecoGAN model.
 For further explanations of the parameters take a look at the runGan.py file.  
-Note: evaluation (test case 2) currently requires an Nvidia GPU with `CUDA`. 
+Note: evaluation (test case 2) currently requires an Nvidia GPU with `CUDA`.
 `tkinter` is also required and may be installed via the `python3-tk` package.
 
 ```bash
 # Install tensorflow1.8+,
+pip install tensorflow-gpu==1.15.0
+pip install -r requirements.txt
+pip install opencv-python==3.4.2.16
+pip install ipython==7.4.0
+conda install -c conda-forge matplotlib
+pip install keras==2.1.2
 pip3 install --ignore-installed --upgrade tensorflow-gpu # or tensorflow
 # Install PyTorch (only necessary for the metric evaluations) and other things...
 pip3 install -r requirements.txt
@@ -43,19 +50,28 @@ python3 runGan.py 0
 
 # Run the inference mode on the calendar scene.
 # You can take a look of the parameter explanations in the runGan.py, feel free to try other scenes!
-python3 runGan.py 1 
+python3 runGan.py 1
 
 # Evaluate the results with 4 metrics, PSNR, LPIPS[1], and our temporal metrics tOF and tLP with pytorch.
-# Take a look at the paper for more details! 
+# Take a look at the paper for more details!
 python3 runGan.py 2
 
+pip install tensorflow-gpu
+pip install numpy==1.16.0
+pip install scipy==1.4.1
+pip install scikit-image
+pip install pandas
+pip install ipython==7.4.0
+conda install -c conda-forge matplotlib
+pip install opencv-python==3.4.2.16
+pip install keras
 ```
 
 ### Train the TecoGAN Model
 
 #### 1. Prepare the Training Data
 
-The training and validation dataset can be downloaded with the following commands into a chosen directory `TrainingDataPath`.  Note: online video downloading requires youtube-dl.  
+The training and validation dataset can be downloaded with the following commands into a chosen directory `TrainingDataPath`. Note: online video downloading requires youtube-dl.
 
 ```bash
 # Install youtube-dl for online video downloading
@@ -76,12 +92,12 @@ python3 dataPrepare.py --start_id 2000 --duration 120 --REMOVE --disk_path Train
 
 ```
 
-Once ready, please update the parameter TrainingDataPath in runGAN.py (for case 3 and case 4), and then you can start training with the downloaded data! 
+Once ready, please update the parameter TrainingDataPath in runGAN.py (for case 3 and case 4), and then you can start training with the downloaded data!
 
 Note: most of the data (272 out of 308 sequences) are the same as the ones we used for the published models, but some (36 out of 308) are not online anymore. Hence the script downloads suitable replacements.
 
+#### 2. Train the Model
 
-#### 2. Train the Model  
 This section gives command to train a new TecoGAN model. Detail and additional parameters can be found in the runGan.py file. Note: the tensorboard gif summary requires ffmpeg.
 
 ```bash
@@ -89,7 +105,7 @@ This section gives command to train a new TecoGAN model. Detail and additional p
 sudo apt-get install ffmpeg # or conda install ffmpeg
 
 # Train the TecoGAN model, based on our FRVSR model
-# Please check and update the following parameters: 
+# Please check and update the following parameters:
 # - VGGPath, it uses ./model/ by default. The VGG model is ca. 500MB
 # - TrainingDataPath (see above)
 # - in main.py you can also adjust the output directory of the  testWhileTrain() function if you like (it will write into a train/ sub directory by default)
@@ -104,13 +120,16 @@ tensorboard --logdir='ex_TecoGANmm-dd-hh/log' --port=8008
 ```
 
 ### Tensorboard GIF Summary Example
+
 <img src="resources/gif_summary_example.gif" alt="gif_summary_example" width="600" hspace="150"/><br>
 
 ### Acknowledgements
+
 This work was funded by the ERC Starting Grant realFlow (ERC StG-2015-637014).  
 Part of the code is based on LPIPS[1], Photo-Realistic SISR[2] and gif_summary[3].
 
 ### Reference
+
 [1] [The Unreasonable Effectiveness of Deep Features as a Perceptual Metric (LPIPS)](https://github.com/richzhang/PerceptualSimilarity)  
 [2] [Photo-Realistic Single Image Super-Resolution Using a Generative Adversarial Network](https://github.com/brade31919/SRGAN-tensorflow.git)  
 [3] [gif_summary](https://colab.research.google.com/drive/1vgD2HML7Cea_z5c3kPBcsHUIxaEVDiIc)

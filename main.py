@@ -16,7 +16,8 @@ import random as rn
 os.environ['PYTHONHASHSEED'] = '0'
 np.random.seed(42)
 rn.seed(12345)
-tf.set_random_seed(1234)
+tf.compat.v1.set_random_seed(1234)
+# tf.random.set_seed(1234)
 
 import tensorflow.contrib.slim as slim
 import sys, shutil, subprocess
@@ -110,7 +111,7 @@ os.environ["CUDA_VISIBLE_DEVICES"]=FLAGS.cudaID
 my_seed = FLAGS.rand_seed
 rn.seed(my_seed)
 np.random.seed(my_seed)
-tf.set_random_seed(my_seed)
+tf.compat.v1.set_random_seed(my_seed)
 
 # Check the output_dir is given
 if FLAGS.output_dir is None:
@@ -135,7 +136,7 @@ class Logger(object):
         
 sys.stdout = Logger()
 
-def printVariable(scope, key = tf.GraphKeys.MODEL_VARIABLES):
+def printVariable(scope, key = tf.compat.v1.GraphKeys.MODEL_VARIABLES):
     print("Scope %s:" % scope)
     variables_names = [ [v.name, v.get_shape().as_list()] for v in tf.get_collection(key, scope=scope)]
     total_sz = 0
@@ -192,19 +193,19 @@ if FLAGS.mode == 'inference':
     print("output shape:", output_shape)
     
     # build the graph
-    inputs_raw = tf.placeholder(tf.float32, shape=input_shape, name='inputs_raw')
+    inputs_raw = tf.compat.v1.placeholder(tf.float32, shape=input_shape, name='inputs_raw')
     
     pre_inputs = tf.Variable(tf.zeros(input_shape), trainable=False, name='pre_inputs')
     pre_gen = tf.Variable(tf.zeros(output_shape), trainable=False, name='pre_gen')
     pre_warp = tf.Variable(tf.zeros(output_shape), trainable=False, name='pre_warp')
     
-    transpose_pre = tf.space_to_depth(pre_warp, 4)
+    transpose_pre = tf.compat.v1.space_to_depth(pre_warp, 4)
     inputs_all = tf.concat( (inputs_raw, transpose_pre), axis = -1)
-    with tf.variable_scope('generator'):
+    with tf.compat.v1.variable_scope('generator'):
         gen_output = generator_F(inputs_all, 3, reuse=False, FLAGS=FLAGS)
         # Deprocess the images outputed from the model, and assign things for next frame
-        with tf.control_dependencies([ tf.assign(pre_inputs, inputs_raw)]):
-            outputs = tf.assign(pre_gen, deprocess(gen_output))
+        with tf.compat.v1.control_dependencies([ tf.compat.v1.assign(pre_inputs, inputs_raw)]):
+            outputs = tf.compat.v1.assign(pre_gen, deprocess(gen_output))
     
     inputs_frames = tf.concat( (pre_inputs, inputs_raw), axis = -1)
     with tf.variable_scope('fnet'):
@@ -213,21 +214,21 @@ if FLAGS.mode == 'inference':
         gen_flow = upscale_four(gen_flow_lr*4.0)
         gen_flow.set_shape( output_shape[:-1]+[2] )
     pre_warp_hi = tf.contrib.image.dense_image_warp(pre_gen, gen_flow)
-    before_ops = tf.assign(pre_warp, pre_warp_hi)
+    before_ops = tf.compat.v1.assign(pre_warp, pre_warp_hi)
 
     print('Finish building the network')
     
     # In inference time, we only need to restore the weight of the generator
-    var_list = tf.get_collection(tf.GraphKeys.MODEL_VARIABLES, scope='generator')
-    var_list = var_list + tf.get_collection(tf.GraphKeys.MODEL_VARIABLES, scope='fnet')
+    var_list = tf.compat.v1.get_collection(tf.compat.v1.GraphKeys.MODEL_VARIABLES, scope='generator')
+    var_list = var_list + tf.compat.v1.get_collection(tf.compat.v1.GraphKeys.MODEL_VARIABLES, scope='fnet')
     
-    weight_initiallizer = tf.train.Saver(var_list)
+    weight_initiallizer = tf.compat.v1.train.Saver(var_list)
     
     # Define the initialization operation
-    init_op = tf.global_variables_initializer()
-    local_init_op = tf.local_variables_initializer()
+    init_op = tf.compat.v1.global_variables_initializer()
+    local_init_op = tf.compat.v1.local_variables_initializer()
 
-    config = tf.ConfigProto()
+    config = tf.compat.v1.ConfigProto()
     config.gpu_options.allow_growth = True
     if (FLAGS.output_pre == ""):
         image_dir = FLAGS.output_dir
@@ -236,7 +237,7 @@ if FLAGS.mode == 'inference':
     if not os.path.exists(image_dir):
         os.makedirs(image_dir)
         
-    with tf.Session(config=config) as sess:
+    with tf.compat.v1.Session(config=config) as sess:
         # Load the pretrained model
         sess.run(init_op)
         sess.run(local_init_op)

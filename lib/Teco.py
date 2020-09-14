@@ -1,4 +1,5 @@
-from lib.frvsr import *
+# from lib.frvsr import *
+from .frvsr import *
 
 VGG_MEAN = [123.68, 116.78, 103.94]
 

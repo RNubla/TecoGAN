@@ -1,5 +1,6 @@
 import tensorflow as tf
-from lib.ops import *
+# from lib.ops import *
+from .ops import *
 
 import cv2 as cv
 import collections, os, math
@@ -8,22 +9,27 @@ from scipy import signal
 
 # The inference data loader. 
 # should be a png sequence
-def inference_data_loader(FLAGS):
+# def inference_data_loader(FLAGS):
+def inference_data_loader(lowResDir:str):
 
-    filedir = FLAGS.input_dir_LR
+    # filedir = FLAGS.input_dir_LR
+    filedir = lowResDir
     downSP = False
-    if (FLAGS.input_dir_LR is None) or (not os.path.exists(FLAGS.input_dir_LR)):
-        if (FLAGS.input_dir_HR is None) or (not os.path.exists(FLAGS.input_dir_HR)):
-            raise ValueError('Input directory not found')
-        filedir = FLAGS.input_dir_HR
-        downSP = True
-        
+    # if (FLAGS.input_dir_LR is None) or (not os.path.exists(FLAGS.input_dir_LR)):
+    # if (FLAGS.input_dir_LR is None) or (not os.path.exists(FLAGS.input_dir_LR)):
+    #     if (FLAGS.input_dir_HR is None) or (not os.path.exists(FLAGS.input_dir_HR)):
+    #         raise ValueError('Input directory not found')
+    #     filedir = FLAGS.input_dir_HR
+    #     downSP = True
+    input_dir_len = -1    
     image_list_LR_temp = os.listdir(filedir)
     image_list_LR_temp = [_ for _ in image_list_LR_temp if _.endswith(".png")] 
     image_list_LR_temp = sorted(image_list_LR_temp) # first sort according to abc, then sort according to 123
     image_list_LR_temp.sort(key=lambda f: int(''.join(list(filter(str.isdigit, f))) or -1))
-    if FLAGS.input_dir_len > 0:
-        image_list_LR_temp = image_list_LR_temp[:FLAGS.input_dir_len]
+    # if FLAGS.input_dir_len > 0:
+    if 1 > 0:
+        # image_list_LR_temp = image_list_LR_temp[:FLAGS.input_dir_len]
+        image_list_LR_temp = image_list_LR_temp[:-1]
         
     image_list_LR = [os.path.join(filedir, _) for _ in image_list_LR_temp]
 

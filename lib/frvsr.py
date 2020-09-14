@@ -1,4 +1,5 @@
-from lib.dataloader import *
+# from lib.dataloader import *
+from .dataloader import *
 
 # Definition of the fnet, more details can be found in TecoGAN paper
 def fnet(fnet_input, reuse=False):
@@ -19,7 +20,8 @@ def fnet(fnet_input, reuse=False):
             net = conv2(net, 3, output_channel, stride, use_bias=True, scope='conv_2')
             net = lrelu(net, 0.2)
             new_shape = tf.shape(net)[1:-1]*2
-            net = tf.image.resize_images(net, new_shape)
+            # net = tf.image.resize_images(net, new_shape)
+            net = tf.image.resize(net, new_shape)
 
         return net
         
@@ -41,10 +43,11 @@ def fnet(fnet_input, reuse=False):
     return net
 
 # Definition of the generator, more details can be found in TecoGAN paper
-def generator_F(gen_inputs, gen_output_channels, reuse=False, FLAGS=None):
+# def generator_F(gen_inputs, gen_output_channels, reuse=False, FLAGS=None):
+def generator_F(gen_inputs, gen_output_channels, reuse=False):
     # Check the flag
-    if FLAGS is None:
-        raise  ValueError('No FLAGS is provided for generator')
+    # if FLAGS is None:
+    #     raise  ValueError('No FLAGS is provided for generator')
 
     # The Bx residual blocks
     def residual_block(inputs, output_channel = 64, stride = 1, scope = 'res_block'):
@@ -56,16 +59,18 @@ def generator_F(gen_inputs, gen_output_channels, reuse=False, FLAGS=None):
 
         return net
 
-    with tf.variable_scope('generator_unit', reuse=reuse):
+    with tf.compat.v1.variable_scope('generator_unit', reuse=reuse):
         # The input layer
-        with tf.variable_scope('input_stage'):
+        with tf.compat.v1.variable_scope('input_stage'):
             net = conv2(gen_inputs, 3, 64, 1, scope='conv')
             stage1_output = tf.nn.relu(net)
 
         net = stage1_output
 
         # The residual block parts
-        for i in range(1, FLAGS.num_resblock+1 , 1): # should be 16 for TecoGAN, and 10 for TecoGANmini
+        # for i in range(1, FLAGS.num_resblock+1 , 1): # should be 16 for TecoGAN, and 10 for TecoGANmini
+        num_resblock = 16
+        for i in range(1, num_resblock+1 , 1): # should be 16 for TecoGAN, and 10 for TecoGANmini
             name_scope = 'resblock_%d'%(i)
             net = residual_block(net, 64, 1, name_scope)
 
