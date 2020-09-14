@@ -10,17 +10,31 @@ from scipy import signal
 # The inference data loader. 
 # should be a png sequence
 # def inference_data_loader(FLAGS):
+<<<<<<< HEAD
 def inference_data_loader(input_dir):
 
     # filedir = FLAGS.input_dir_LR
     filedir = input_dir
     downSP = False
     # if (FLAGS.input_dir_LR is None) or (not os.path.exists(FLAGS.input_dir_LR)):
+=======
+def inference_data_loader(lowResDir:str):
+
+    # filedir = FLAGS.input_dir_LR
+    filedir = lowResDir
+    downSP = False
+    # if (FLAGS.input_dir_LR is None) or (not os.path.exists(FLAGS.input_dir_LR)):
+    # if (FLAGS.input_dir_LR is None) or (not os.path.exists(FLAGS.input_dir_LR)):
+>>>>>>> f40c3bfed53d35787898e50b9deea905b9a07f8e
     #     if (FLAGS.input_dir_HR is None) or (not os.path.exists(FLAGS.input_dir_HR)):
     #         raise ValueError('Input directory not found')
     #     filedir = FLAGS.input_dir_HR
     #     downSP = True
+<<<<<<< HEAD
         
+=======
+    input_dir_len = -1    
+>>>>>>> f40c3bfed53d35787898e50b9deea905b9a07f8e
     image_list_LR_temp = os.listdir(filedir)
     image_list_LR_temp = [_ for _ in image_list_LR_temp if _.endswith(".png")] 
     image_list_LR_temp = sorted(image_list_LR_temp) # first sort according to abc, then sort according to 123
