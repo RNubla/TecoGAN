@@ -69,8 +69,7 @@ def generator_F(gen_inputs, gen_output_channels, reuse=False):
 
         # The residual block parts
         # for i in range(1, FLAGS.num_resblock+1 , 1): # should be 16 for TecoGAN, and 10 for TecoGANmini
-        num_resblock = 16
-        for i in range(1, num_resblock+1 , 1): # should be 16 for TecoGAN, and 10 for TecoGANmini
+        for i in range(1, 16+1 , 1): # should be 16 for TecoGAN, and 10 for TecoGANmini
             name_scope = 'resblock_%d'%(i)
             net = residual_block(net, 64, 1, name_scope)
 

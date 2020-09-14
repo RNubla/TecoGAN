@@ -67,7 +67,7 @@ if( runcase == 0 ): # download inference data, trained models
 elif( runcase == 1 ): # inference a trained model
     
     dirstr = './results/' # the place to save the results
-    testpre = ['bomb'] # the test cases
+    testpre = ['calendar'] # the test cases
 
     if (not os.path.exists(dirstr)): os.mkdir(dirstr)
     
@@ -85,6 +85,7 @@ elif( runcase == 1 ): # inference a trained model
             "--num_resblock", "16",  # our model has 16 residual blocks, 
             # the pre-trained FRVSR and TecoGAN mini have 10 residual blocks
             "--checkpoint", './model/TecoGAN',  # the path of the trained model,
+            # "--checkpoint", 'D:/Programming/Python/FeatureFlow-App/final-model/TecoGAN',  # the path of the trained model,
             "--output_ext", "png"               # png is more accurate, jpg is smaller
         ]
         mycall(cmd1).communicate()
